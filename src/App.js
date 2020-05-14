@@ -17,7 +17,7 @@ class App extends Component{
                     <input type="checkbox" />
                     <div className="todo-item-label">{todo.title}</div>
                 </div>
-                {/*<div className="remove-item" onClick={this.deleteTodo(index)}>&times;</div>*/}
+                <div className="remove-item" onClick={(event) => this.deleteTodo(index)}>&times;</div>
             </div>
             )}
         </div>
@@ -85,9 +85,13 @@ class App extends Component{
       }
   }
 
-  // deleteTodo = index => {
-  //     console.log(index)
-  // }
+  deleteTodo = index => {
+      this.setState((state, props) => {
+          let todos = [...state.todos];
+          todos.splice(index, 1);
+          return { todos };
+      });
+  }
 }
 
 export default App;
