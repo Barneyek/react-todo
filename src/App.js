@@ -63,10 +63,16 @@ class App extends Component{
       if (event.key === 'Enter'){
           const todoInput = this.todoInput.current.value;
 
+          if (todoInput.trim().length === 0){
+              return;
+          }
+          
           this.setState((state, props) => {
               let todos = state.todos;
+              let idForTodo = state.idForTodo + 1;
+
               todos.push({
-                  id: 3,
+                  id: idForTodo,
                   title: todoInput,
                   completed: false,
                   editing: false,
@@ -76,6 +82,7 @@ class App extends Component{
                 todos: todos,
               };
           });
+          this.todoInput.current.value = "";
       }
   }
 }
