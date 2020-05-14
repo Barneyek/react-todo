@@ -17,7 +17,7 @@ class App extends Component{
                     <input type="checkbox" onChange={(event) => this.checkTodo(index)}/>
                     <div className="todo-item-label">{todo.title}</div>
                 </div>
-                <div className="remove-item" onClick={(event) => this.deleteTodo(index)}>&times;</div>
+                <div className="remove-item" onClick={(event) => this.deleteTodo(todo.id)}>&times;</div>
             </div>
             )}
         </div>
@@ -46,14 +46,20 @@ class App extends Component{
       idForTodo: 3,
       todos: [
           {
-              'id': 1,
+              'id': 0,
               'title': 'Finish React Screencast',
               'completed': false,
               'editing': false,
           },
           {
-              'id': 2,
+              'id': 1,
               'title': 'Take over world',
+              'completed': false,
+              'editing': false,
+          },
+          {
+              'id': 2,
+              'title': 'Eldo',
               'completed': false,
               'editing': false,
           }
@@ -87,19 +93,18 @@ class App extends Component{
       }
   }
 
-  deleteTodo = index => {
-      this.setState((state, props) => {
-          let todos = [...state.todos];
-          todos.splice(index, 1);
-          return { todos };
-      });
+  deleteTodo = (id) => {
+      this.setState(prevstate => ({
+         todos : prevstate.todos.filter(item => item.id !== id )
+      }));
   }
+
     checkTodo = (index,event) => {
         this.setState((state, props) => {
             let todos = [...state.todos];
             const newTodo = {...todos[index], completed: !todos[index].completed}
-            todos[index] = newTodo
-            return {todos};
+            todos[index] = newTodo;
+            return { todos };
         });
     }
 
