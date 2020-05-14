@@ -14,7 +14,7 @@ class App extends Component{
             {this.state.todos.map((todo,index)=>
             <div key={todo.id} className="todo-item">
                 <div className="todo-item-left">
-                    <input type="checkbox" />
+                    <input type="checkbox" onChange={(event) => this.checkTodo(index)}/>
                     <div className="todo-item-label">{todo.title}</div>
                 </div>
                 <div className="remove-item" onClick={(event) => this.deleteTodo(index)}>&times;</div>
@@ -43,6 +43,7 @@ class App extends Component{
 
   todoInput = React.createRef();
   state = {
+      idForTodo: 3,
       todos: [
           {
               'id': 1,
@@ -70,6 +71,7 @@ class App extends Component{
           this.setState((state, props) => {
               let todos = [...state.todos];
               let idForTodo = state.idForTodo + 1;
+
               todos.push({
                   id: idForTodo,
                   title: todoInput,
@@ -78,7 +80,7 @@ class App extends Component{
               });
 
               return {
-                todos: todos,
+                todos: todos,idForTodo
               };
           });
           this.todoInput.current.value = "";
@@ -92,6 +94,15 @@ class App extends Component{
           return { todos };
       });
   }
+    checkTodo = (index,event) => {
+        this.setState((state, props) => {
+            let todos = [...state.todos];
+            const newTodo = {...todos[index], completed: !todos[index].completed}
+            todos[index] = newTodo
+            return {todos};
+        });
+    }
+
 }
 
 export default App;
