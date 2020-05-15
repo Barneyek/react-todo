@@ -15,7 +15,29 @@ class App extends Component{
             <div key={todo.id} className="todo-item">
                 <div className="todo-item-left">
                     <input type="checkbox" onChange={(event) => this.checkTodo(index)}/>
-                    <div className={"todo-item-label " + (todo.completed ? 'completed' : '')}>{todo.title}</div>
+                    {!todo.editing &&
+                        <div
+                            className={"todo-item-label " + (todo.completed ? 'completed' : '')}
+                            onDoubleClick={(event) => this.editTodo(index,event,todo)}>
+                            {todo.title}
+                        </div>
+                    }
+                    {todo.editing &&
+                        <input
+                            className="todo-item-edit"
+                            type="text"
+                            autoFocus
+                            defaultValue={todo.title}
+                            onBlur={(event) => this.doneEdit(todo,index,event)}
+                            onKeyUp={ (event )=>{
+                                if (event.key === 'Enter' ) {
+                                    this.doneEdit(todo,index,event);
+                                }   else if (event.key === 'Escape'){
+                                    this.cancleEdit(todo,index,event);
+                                }
+                            }}
+                        />
+                    }
                 </div>
                 <div className="remove-item" onClick={(event) => this.deleteTodo(todo.id)}>&times;</div>
             </div>
@@ -44,6 +66,7 @@ class App extends Component{
   todoInput = React.createRef();
   state = {
       idForTodo: 3,
+      beforeEditCache: '',
       todos: [
           {
               'id': 0,
@@ -108,6 +131,42 @@ class App extends Component{
         });
     }
 
+    editTodo = (index,event,todo) => {
+        this.setState((state, props) => {
+            let todos = [...state.todos];
+            const newTodo = {...todos[index], editing: !todos[index].completed}
+            todos[index] = newTodo;
+            return { todos , beforeEditCache: todo.title};
+        });
+    }
+
+    doneEdit = (todo,index,event) => {
+      event.persist();
+        this.setState((prevstate, props) => {
+            let todos = [...prevstate.todos];
+            const newTodo = {...todos[index], editing: todos[index].completed}
+            if (event.target.value.trim().length === 0){
+                console.log("tak")
+                todo.title = prevstate.beforeEditCache;
+            }else{
+             todo.title = event.target.value;
+            }
+            todos[index] = newTodo;
+            return { todos };
+        });
+    }
+
+    cancleEdit = (todo,index,event) => {
+        event.persist();
+        this.setState((prevstate, props) => {
+            let todos = [...prevstate.todos];
+            const newTodo = {...todos[index], editing: todos[index].completed}
+            console.log(prevstate.beforeEditCache);
+            todo.title = prevstate.beforeEditCache;
+            todos[index] = newTodo;
+            return { todos };
+        });
+    }
 }
 
 export default App;
