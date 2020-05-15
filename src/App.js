@@ -15,7 +15,7 @@ class App extends Component{
             <div key={todo.id} className="todo-item">
                 <div className="todo-item-left">
                     <input type="checkbox" onChange={(event) => this.checkTodo(index)}/>
-                    <div className="todo-item-label">{todo.title}</div>
+                    <div className={"todo-item-label " + (todo.completed ? 'completed' : '')}>{todo.title}</div>
                 </div>
                 <div className="remove-item" onClick={(event) => this.deleteTodo(todo.id)}>&times;</div>
             </div>
