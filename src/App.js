@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import * as classnames from 'classnames';
 
 class App extends Component{
   render(){
@@ -11,7 +12,7 @@ class App extends Component{
         </header>
         <div className="todo-container">
           <input type="text" className="todo-input" placeholder="What needs to be done" ref={this.todoInput} onKeyUp={this.addTodo}/>
-            {this.state.todos.map((todo,index)=>
+            {this.todosFiltered().map((todo,index)=>
             <div key={todo.id} className="todo-item">
                 <div className="todo-item-left">
                     <input type="checkbox" onChange={(event) => this.checkTodo(index)}/>
@@ -51,13 +52,30 @@ class App extends Component{
         </div>
         <div className="extra-container">
           <div>
-            <button>All</button>
-            <button>Active</button>
-            <button>Completed</button>
+            <button
+              onClick={() => this.updateFilter('all')} 
+              className={classnames({'active': this.state.filter === 'all'})}
+            >
+              All
+            </button>
+            <button 
+              onClick={() => this.updateFilter('active')}
+              className={classnames({'active': this.state.filter === 'active'})}
+            >
+              Active
+            </button>
+            <button 
+              onClick={() => this.updateFilter('completed')}
+              className={classnames({'active': this.state.filter === 'completed'})}
+            >
+              Completed
+            </button>
           </div>
-          <div>
-            <button>Clear completed</button>
-          </div>
+          { this.todosCompletedCount() > 0  && 
+            <div>
+              <button onClick={this.clearCompleted}>Clear completed</button>
+            </div>
+          }
         </div>
       </div>
     );
@@ -67,6 +85,7 @@ class App extends Component{
   state = {
       idForTodo: 3,
       beforeEditCache: '',
+      filter: 'all',
       todos: [
           {
               'id': 0,
@@ -161,7 +180,6 @@ class App extends Component{
         this.setState((prevstate, props) => {
             let todos = [...prevstate.todos];
             const newTodo = {...todos[index], editing: todos[index].completed}
-            console.log(prevstate.beforeEditCache);
             todo.title = prevstate.beforeEditCache;
             todos[index] = newTodo;
             return { todos };
@@ -170,6 +188,35 @@ class App extends Component{
 
     remaining = () => {
       return this.state.todos.filter(todo => !todo.completed).length;
+    }
+
+    todosCompletedCount = () => {
+      return this.state.todos.filter(todo => todo.completed).length;
+    }
+
+    
+    clearCompleted = () => {
+      this.setState((prevstate, props) => {
+        return { todos: prevstate.todos.filter(todo => !todo.completed) };
+      });
+    }
+
+    updateFilter = filter => {
+      this.setState({
+        filter
+      })
+    }
+
+    todosFiltered = () => {
+      if (this.state.filter === 'all') {
+        return this.state.todos;
+      } else if (this.state.filter === 'active') {
+        return this.state.todos.filter(todo => !todo.completed);
+      } else if (this.state.filter === 'completed') {
+        return this.state.todos.filter(todo => todo.completed);
+      }
+
+      return this.state.todos;
     }
 }
 
