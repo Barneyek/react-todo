@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import * as classnames from 'classnames';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class App extends Component{
   render(){
@@ -12,6 +13,11 @@ class App extends Component{
         </header>
         <div className="todo-container">
           <input type="text" className="todo-input" placeholder="What needs to be done" ref={this.todoInput} onKeyUp={this.addTodo}/>
+          <ReactCSSTransitionGroup 
+            transitionName="fade"
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}
+          >
             {this.todosFiltered().map((todo,index)=>
             <div key={todo.id} className="todo-item">
                 <div className="todo-item-left">
@@ -43,10 +49,17 @@ class App extends Component{
                 <div className="remove-item" onClick={(event) => this.deleteTodo(todo.id)}>&times;</div>
             </div>
             )}
+          </ReactCSSTransitionGroup>
         </div>
+        
         <div className="extra-container">
           <label>
-            <input type="checkbox" onChange={this.checkAllTodos}/>Check All
+            <input
+              type="checkbox" 
+              onChange={this.checkAllTodos}
+              checked={!this.anyRemaining()}
+            />
+            Check All
           </label>
           <div>{this.remaining()} items left</div>
         </div>
@@ -71,11 +84,17 @@ class App extends Component{
               Completed
             </button>
           </div>
-          { this.todosCompletedCount() > 0  && 
-            <div>
-              <button onClick={this.clearCompleted}>Clear completed</button>
-            </div>
-          }
+          <ReactCSSTransitionGroup 
+            transitionName="fade"
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}
+          >
+            { this.todosCompletedCount() > 0  && 
+              <div>
+                <button onClick={this.clearCompleted}>Clear completed</button>
+              </div>
+            }
+          </ReactCSSTransitionGroup>
         </div>
       </div>
     );
@@ -188,6 +207,10 @@ class App extends Component{
 
     remaining = () => {
       return this.state.todos.filter(todo => !todo.completed).length;
+    }
+
+    anyRemaining = () => {
+      return this.remaining() !== 0;
     }
 
     todosCompletedCount = () => {

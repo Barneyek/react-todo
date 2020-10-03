@@ -1,17 +1,17 @@
-#app{
-  font-family: Avenir,Helvetica,Arial,sans-serif;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
 }
 
-.container{
+.container {
   max-width: 600px;
   margin: 0 auto;
 }
 
-.app-logo{
+.app-logo {
   display: block;
   margin: 10px auto;
   height: 95px;
@@ -105,12 +105,20 @@ button .active {
   background: lightgreen;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .2s;
+.fade-enter {
+  opacity: 0;
 }
 
-.fade-enter,
-.fade-leave-to {
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 0.3s ease-in;
+}
+
+.fade-leave-active {
   opacity: 0;
+  transition: opacity 0.3s ease-out;
 }
