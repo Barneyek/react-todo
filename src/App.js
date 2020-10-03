@@ -47,7 +47,7 @@ class App extends Component{
           <label>
             <input type="checkbox" />Check All
           </label>
-          <div>2 items left</div>
+          <div>{this.remaining()} items left</div>
         </div>
         <div className="extra-container">
           <div>
@@ -166,6 +166,10 @@ class App extends Component{
             todos[index] = newTodo;
             return { todos };
         });
+    }
+
+    remaining = () => {
+      return this.state.todos.filter(todo => !todo.completed).length;
     }
 }
 
