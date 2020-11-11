@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 
-class TodosRemaining extends Component {
-    render() {
-        return (
-            <div>{this.props.remaining} items left</div>
-        );
-    }
-}
+const TodosRemaining = inject('TodoStore')(observer(props => {
+    return (
+        <div>{props.TodoStore.remaining} items left</div>
+    );
+}));
 
 export default TodosRemaining;
 
-
-TodosRemaining.propTypes = {
+TodosRemaining.wrappedComponent.propTypes = {
     remaining : PropTypes.number.isRequired,
 }

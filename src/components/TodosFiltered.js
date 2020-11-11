@@ -1,35 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as classnames from 'classnames';
+import { inject, observer } from 'mobx-react';
 
-const TodosFiltered = props => {
+const TodosFiltered = inject('TodoStore')(observer(props => {
+  const TodoStore = props.TodoStore;
     return (
         <div>
             <button
-            onClick={() => props.updateFilter('all')} 
-            className={classnames({'active': props.filter === 'all'})}
+              onClick={() => TodoStore.updateFilter('all')}
+              className={classnames({'active': TodoStore.filter === 'all'})}
             >
-            All
+              All
             </button>
             <button 
-            onClick={() => props.updateFilter('active')}
-            className={classnames({'active': props.filter === 'active'})}
+              onClick={() => TodoStore.updateFilter('active')}
+              className={classnames({'active': TodoStore.filter === 'active'})}
             >
-            Active
+              Active
             </button>
             <button 
-            onClick={() => props.updateFilter('completed')}
-            className={classnames({'active': props.filter === 'completed'})}
+              onClick={() => TodoStore.updateFilter('completed')}
+              className={classnames({'active': TodoStore.filter === 'completed'})}
             >
-            Completed
+              Completed
             </button>
         </div>
     );
-};
+}));
 
-TodosFiltered.propTypes = {
-    updateFilter: PropTypes.func.isRequired,
-    filter: PropTypes.string.isRequired
+TodosFiltered.wrappedComponent.propTypes = {
+  TodoStore: PropTypes.object.isRequired,
 };
 
 export default TodosFiltered;
